@@ -20,6 +20,7 @@ int nMapWidth = 16;
 
 // Distances read
 float fFOV = 3.14159 / 4.0;
+float fDepth = 16.0f;
 
 int main() {
 	
@@ -56,6 +57,31 @@ int main() {
 			float fRayAngle = (fPlayerA - fFOV / 2.0f) + ((float)x / (float)nScreenWidth) + fFOV;
 
 			float fDistanceToWall = 0;
+			bool bHitWall = false;
+
+			// Unit vector for ray in player space
+			float fEyeX = sinf(fRayAngle);
+			float fEyeY = cosf(fRayAngle);
+
+			// Cutting distance micro step by micro step
+			while (!bHitWall && fDistanceToWall < fDepth) {
+				fDistanceToWall += 0.1f;
+
+				int nTestX = (int)(fPlayerX + fEyeX * fDistanceToWall);
+				int nTestY = (int)(fPlayerY + fEyeY * fDistanceToWall);
+
+				// Test if ray is out of bounds
+				if (nTestX < 0 || nTestX >= nMapWidth || nTestY < 0 || nTestY >= nMapHeight) {
+					bHitWall = true; // Maximun depth
+					fDistanceToWall = fDepth;
+				}
+				else {
+					// Ray is inbounds so test to see if the ray cell is a wall block
+					if (map[nTestY * nMapWidth + nTestX] == '#') {
+						bHitWall = true;
+					}
+				}
+			}
 		}
 
 		screen[nScreenWidth * nScreenHeight - 1] = '\0';
