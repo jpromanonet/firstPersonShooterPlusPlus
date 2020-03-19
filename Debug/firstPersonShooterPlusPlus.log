@@ -1,2 +1,4 @@
 ﻿  firstPersonShooterPlusPlus.cpp
+C:\Users\winEnv\Source\Repos\firstPersonShooterPlusPlus\firstPersonShooterPlusPlus.cpp(22,27): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+C:\Users\winEnv\Source\Repos\firstPersonShooterPlusPlus\firstPersonShooterPlusPlus.cpp(87,17): warning C4244: 'inicializando': conversión de 'float' a 'int'; posible pérdida de datos
   firstPersonShooterPlusPlus.vcxproj -> C:\Users\winEnv\Source\Repos\firstPersonShooterPlusPlus\Debug\firstPersonShooterPlusPlus.exe
