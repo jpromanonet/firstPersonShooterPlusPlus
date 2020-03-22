@@ -79,9 +79,9 @@ int main() {
 			fPlayerY += cosf(fPlayerA) * 5.0f * fElapsedTime;
 
 			// Colition forward
-			if (map[(int)fPlayerY * nMapWidth + (int)fPlayerX == '#']) {
-				fPlayerX += sinf(fPlayerA) * 5.0f * fElapsedTime;
-				fPlayerY += cosf(fPlayerA) * 5.0f * fElapsedTime;
+			if (map[(int)fPlayerY * nMapWidth + (int)fPlayerX] == '#') {
+				fPlayerX -= sinf(fPlayerA) * 5.0f * fElapsedTime;
+				fPlayerY -= cosf(fPlayerA) * 5.0f * fElapsedTime;
 			}
 		}
 
@@ -89,6 +89,12 @@ int main() {
 		if (GetAsyncKeyState((unsigned short)'S') & 0x8000) {
 			fPlayerX -= sinf(fPlayerA) * 5.0f * fElapsedTime;
 			fPlayerY -= cosf(fPlayerA) * 5.0f * fElapsedTime;
+
+			// Colition backward
+			if (map[(int)fPlayerY * nMapWidth + (int)fPlayerX] == '#') {
+				fPlayerX += sinf(fPlayerA) * 5.0f * fElapsedTime;
+				fPlayerY += cosf(fPlayerA) * 5.0f * fElapsedTime;
+			}
 		}
 
 		for (int x = 0; x < nScreenWidth; x++) {
