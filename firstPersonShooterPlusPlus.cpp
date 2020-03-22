@@ -1,5 +1,6 @@
 // Calling main libraries
 #include <iostream>
+#include <chrono>
 #include <Windows.h>
 
 // Caliing namespace
@@ -49,8 +50,28 @@ int main() {
 	map += L"#..............#";
 	map += L"################";
 
+	// Time points
+	auto tp1 = chrono::system_clock::now();
+	auto tp2 = chrono::system_clock::now();
+
 	// Game loop
 	while (1) {
+
+		// Using the time points
+		tp2 = chrono::system_clock::now();
+		chrono::duration<float> elapsedTime = tp2 - tp1;
+		tp1 = tp2;
+		float fElapsedTime = elapsedTime.count();
+		
+		//Controls & Hanlde CCW Rotation
+
+		// Left side movement is key A
+		if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
+			fPlayerA -= (0.1f) * fElapsedTime;
+
+		// Right side movement is key D
+		if (GetAsyncKeyState((unsigned short)'D') & 0x8000)
+			fPlayerA += (0.1f) * fElapsedTime;
 
 		for (int x = 0; x < nScreenWidth; x++) {
 			// For each column, calculate the projected ray angle into world space
