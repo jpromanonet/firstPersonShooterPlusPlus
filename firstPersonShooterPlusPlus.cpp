@@ -37,15 +37,15 @@ int main() {
 	map += L"#..............#";
 	map += L"#..............#";
 	map += L"#..............#";
+	map += L"#..........#...#";
+	map += L"#..........#...#";
 	map += L"#..............#";
 	map += L"#..............#";
 	map += L"#..............#";
 	map += L"#..............#";
 	map += L"#..............#";
 	map += L"#..............#";
-	map += L"#..............#";
-	map += L"#..............#";
-	map += L"#..............#";
+	map += L"#.......########";
 	map += L"#..............#";
 	map += L"#..............#";
 	map += L"################";
@@ -54,7 +54,7 @@ int main() {
 	auto tp1 = chrono::system_clock::now();
 	auto tp2 = chrono::system_clock::now();
 
-	// Game loop
+	// Game loop 
 	while (1) {
 
 		// Using the time points
@@ -67,11 +67,29 @@ int main() {
 
 		// Left side movement is key A
 		if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
-			fPlayerA -= (0.1f) * fElapsedTime;
+			fPlayerA -= (0.8f) * fElapsedTime;
 
 		// Right side movement is key D
 		if (GetAsyncKeyState((unsigned short)'D') & 0x8000)
-			fPlayerA += (0.1f) * fElapsedTime;
+			fPlayerA += (0.8f) * fElapsedTime;
+
+		// Forward movement is key W
+		if (GetAsyncKeyState((unsigned short)'W') & 0x8000) {
+			fPlayerX += sinf(fPlayerA) * 5.0f * fElapsedTime;
+			fPlayerY += cosf(fPlayerA) * 5.0f * fElapsedTime;
+
+			// Colition forward
+			if (map[(int)fPlayerY * nMapWidth + (int)fPlayerX == '#']) {
+				fPlayerX += sinf(fPlayerA) * 5.0f * fElapsedTime;
+				fPlayerY += cosf(fPlayerA) * 5.0f * fElapsedTime;
+			}
+		}
+
+		// Backward movement is key W
+		if (GetAsyncKeyState((unsigned short)'S') & 0x8000) {
+			fPlayerX -= sinf(fPlayerA) * 5.0f * fElapsedTime;
+			fPlayerY -= cosf(fPlayerA) * 5.0f * fElapsedTime;
+		}
 
 		for (int x = 0; x < nScreenWidth; x++) {
 			// For each column, calculate the projected ray angle into world space
@@ -108,13 +126,30 @@ int main() {
 			int nCeiling = (float)(nScreenHeight / 2.0) - nScreenHeight / ((float)fDistanceToWall);
 			int nFloor = nScreenHeight - nCeiling;
 
+			// Calculating the wall shades
+			short nShade = ' ';
+
+			if (fDistanceToWall <= fDepth / 4.0f)		nShade = 0x2588;
+			else if (fDistanceToWall < fDepth / 3.0f)	nShade = 0x2593;
+			else if (fDistanceToWall < fDepth / 2.0f)	nShade = 0x2592;
+			else if (fDistanceToWall < fDepth)			nShade = 0x2591;
+			else										nShade = ' ';
+
 			for (int y = 0; y < nScreenHeight; y++) {
-				if (y < nCeiling)
+				if (y <= nCeiling)
 					screen[y * nScreenWidth + x] = ' ';
 				else if(y > nCeiling && y <= nFloor)
-					screen[y * nScreenWidth + x] = '#';
-				else
-					screen[y * nScreenWidth + x] = ' ';
+					screen[y * nScreenWidth + x] = nShade;
+				else {
+					// Shade floor based on distance
+					float b = 1.0f - (((float)y - nScreenHeight / 2.0f) / ((float)nScreenHeight / 2.0f));
+					if (b < 0.25)		nShade = '#';
+					else if (b < 0.5)	nShade = 'X';
+					else if (b < 0.75)	nShade = '.';
+					else if (b < 0.9)	nShade = '-';
+					else				nShade = ' ';
+					screen[y * nScreenWidth + x] = nShade;
+				}
 			}
 		}
 
