@@ -103,6 +103,7 @@ int main() {
 
 			float fDistanceToWall = 0;
 			bool bHitWall = false;
+			bool bBoundary = false;
 
 			// Unit vector for ray in player space
 			float fEyeX = sinf(fRayAngle);
