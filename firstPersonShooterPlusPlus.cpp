@@ -1,11 +1,11 @@
 // Calling main libraries
 #include <iostream>
 #include <chrono>
-#include <Windows.h>
 #include <vector>
 #include <utility>
 #include <algorithm>
 #include <stdio.h>
+#include <Windows.h>
 
 // Caliing namespace
 using namespace std;
@@ -192,7 +192,13 @@ int main() {
 		swprintf_s(screen, 40, L"X=%3.2f, Y=%3.2f, A=%3.2f, FPS=%3.2f", fPlayerX, fPlayerY, fPlayerA, 1.0f / fElapsedTime);
 
 		// Display map
+		for (int nx = 0; nx < nMapWidth; nx++) {
+			for (int ny = 0; ny < nMapWidth; ny++) {
+				screen[(ny + 1) * nScreenWidth + nx] = map[ny * nMapWidth + nx];
+			}
 
+			screen[((int)fPlayerX + 1) * nScreenWidth + (int)fPlayerY] = 'P';
+		}
 
 		// Display Frame
 		screen[nScreenWidth * nScreenHeight - 1] = '\0';
