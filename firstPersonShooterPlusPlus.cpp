@@ -125,6 +125,15 @@ int main() {
 					// Ray is inbounds so test to see if the ray cell is a wall block
 					if (map[nTestY * nMapWidth + nTestX] == '#') {
 						bHitWall = true;
+
+						vector<pair<float, float>> p;
+
+						for (int tx = 0; tx < 2; tx++) {
+							for (int ty = 0; ty < 2; ty++) {
+								float vy = (float)nTestY + ty - fPlayerY;
+								float vx = (float)nTestX + tx - fPlayerX;
+							}
+						}
 					}
 				}
 			}
