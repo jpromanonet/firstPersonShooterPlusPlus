@@ -2,6 +2,10 @@
 #include <iostream>
 #include <chrono>
 #include <Windows.h>
+#include <vector>
+#include <utility>
+#include <algorithm>
+#include <stdio.h>
 
 // Caliing namespace
 using namespace std;
@@ -22,6 +26,7 @@ int nMapWidth = 16;
 // Distances read
 float fFOV = 3.14159 / 4.0;
 float fDepth = 16.0f;
+float fSpeed = 5.0f;
 
 int main() {
 	
@@ -33,20 +38,20 @@ int main() {
 
 	// Drawing the map
 	wstring map;
-	map += L"################";
-	map += L"#..............#";
-	map += L"#..............#";
-	map += L"#..............#";
-	map += L"#..........#...#";
-	map += L"#..........#...#";
-	map += L"#..............#";
-	map += L"#..............#";
-	map += L"#..............#";
-	map += L"#..............#";
-	map += L"#..............#";
+	map += L"########........";
 	map += L"#..............#";
 	map += L"#.......########";
 	map += L"#..............#";
+	map += L"#......##......#";
+	map += L"#......##......#";
+	map += L"#..............#";
+	map += L"###............#";
+	map += L"##.............#";
+	map += L"#......####..###";
+	map += L"#..............#";
+	map += L"#..............#";
+	map += L"#..............#";
+	map += L"#......#########";
 	map += L"#..............#";
 	map += L"################";
 
@@ -140,7 +145,7 @@ int main() {
 						// Sort pairs from the closest one to the farthest one.
 						sort(p.begin(), p.end(), [](const pair<float, float>& left, const pair<float, float>& right) {return left.first < right.first;});
 
-						float fBound = 0.05;
+						float fBound = 0.01;
 						if (acos(p.at(0).second) < fBound) bBoundary = true;
 						if (acos(p.at(1).second) < fBound) bBoundary = true;
 						}
@@ -161,6 +166,9 @@ int main() {
 			else if (fDistanceToWall < fDepth)			nShade = 0x2591;
 			else										nShade = ' ';
 
+			//Black it out
+			if (bBoundary)		nShade = ' ';
+
 			for (int y = 0; y < nScreenHeight; y++) {
 				if (y <= nCeiling)
 					screen[y * nScreenWidth + x] = ' ';
@@ -175,10 +183,18 @@ int main() {
 					else if (b < 0.9)	nShade = '-';
 					else				nShade = ' ';
 					screen[y * nScreenWidth + x] = nShade;
+
 				}
 			}
 		}
 
+		// Display Stats
+		swprintf_s(screen, 40, L"X=%3.2f, Y=%3.2f, A=%3.2f, FPS=%3.2f", fPlayerX, fPlayerY, fPlayerA, 1.0f / fElapsedTime);
+
+		// Display map
+
+
+		// Display Frame
 		screen[nScreenWidth * nScreenHeight - 1] = '\0';
 		WriteConsoleOutputCharacter(hConsole, screen, nScreenWidth * nScreenHeight, { 0,0 }, &dwBytestWritten);
 	}
