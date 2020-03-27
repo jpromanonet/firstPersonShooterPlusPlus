@@ -132,7 +132,17 @@ int main() {
 							for (int ty = 0; ty < 2; ty++) {
 								float vy = (float)nTestY + ty - fPlayerY;
 								float vx = (float)nTestX + tx - fPlayerX;
+								float d = sqrt(vx * vx + vy * vy);
+								float dot = (fEyeX * vx / d) + (fEyeY * vy / d);
+								p.push_back(make_pair(d, dot));
 							}
+
+						// Sort pairs from the closest one to the farthest one.
+						sort(p.begin(), p.end(), [](const pair<float, float>& left, const pair<float, float>& right) {return left.first < right.first;});
+
+						float fBound = 0.05;
+						if (acos(p.at(0).second) < fBound) bBoundary = true;
+						if (acos(p.at(1).second) < fBound) bBoundary = true;
 						}
 					}
 				}
